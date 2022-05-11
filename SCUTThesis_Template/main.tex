@@ -1,0 +1,26 @@
+\documentclass{scutthesis}
+
+\input{metadata.tex}
+\addbibresource{ref.bib}
+
+\begin{document}
+  %\let\cleardoublepage\clearpage
+  \makecover
+
+  \frontmatter
+  \input{abstract}
+
+  \tableofcontents
+
+  \mainmatter
+   \input{chapter01}
+   \input{chapter02}
+   \input{chapter03}
+   \input{chapter04}
+ 
+
+  \backmatter
+   \pagestyle{back}
+  \printbibliography[heading=bibintoc]
+  % \input{tex/thanks.tex}
+ \end{document}
