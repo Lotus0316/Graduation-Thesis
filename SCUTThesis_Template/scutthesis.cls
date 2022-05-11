@@ -10,7 +10,7 @@
 \def\version{v0.11}
 
 \PassOptionsToPackage{no-math}{fontspec}
-\LoadClass[a4paper, UTF8, zihao=-4, twoside]{ctexbook}
+\LoadClass[a4paper, UTF8, zihao=-4, twoside, openany]{ctexbook}
 
 \AtEndOfClass{\input{scutthesis.cfg}}
 
