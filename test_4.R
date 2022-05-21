@@ -3,29 +3,22 @@ library(Matrix)
 mvg<-function(n,p){
   mean<-rep(0,sum(p))
   sigma<-diag(sum(p))
-  x<-mvrnorm(n[1], mean, sigma) #这里是用了正态性假设
-  for (i in 2:length(n)) {
-    x<-rbind(x,mvrnorm(n[i], mean, sigma))
+  y<-array(0,dim=c(max(n),p,length(n)))
+  for (i in 1:length(n)) {
+    y[,,i]<-mvrnorm(n[i], mean, sigma)
   }
-  x
+  y
 }
 #上述样本生成器的生成样本格式为将每个总体的样本依次拼接，为行向量形式，即x2j依次接在x1j下方，这样一来
 #第i个总体的样本就位于sum(n[1:i-1])+1到sum(n[1:i])行之间
 chi_method<-function(n,p,x){
-  y<-colMeans(x[1:n[1],])
-  N<-sum(n)
   k<-length(n)
-  for (i in 2:k) {
-    y<-rbind(y,colMeans(x[(sum(n[1:(i-1)])+1):(sum(n[1:i])),]))
-  }
-  #这样就构造了一个y矩阵，其每一行分别对应着第i个总体的样本均值
+  y<-matrix(0,k,p)
+  N<-sum(n)
   a<-rep(0,k)
-  A<-diag(0,p)
+  A<-matrix(0,p,p)
   for (i in 1:k) {
-    Ai<-diag(0,p)
-    for (j in 1:n[i]) {
-      Ai<-Ai+(x[sum(n[1:i-1])+j,]-y[i])%o%(x[sum(n[1:i-1])+j,]-y[i])
-    }
+    Ai<-(n[i]-1)*cov(x[,,i])
     a[i]<-det(Ai)
     A<-A+Ai
   }
@@ -44,7 +37,6 @@ draw_chi<-function(n,p){
        breaks=40,
        freq=F,
        xlab=NULL,
-       ylim=c(0,0.06),
        main = paste("n=",paste(n,collapse=","),",","p=",p))
   curve(dchisq(x, f), 
         add=TRUE, 
@@ -53,19 +45,17 @@ draw_chi<-function(n,p){
 }
 
 cen_method<-function(n,p,x){
-  y<-colMeans(x[1:n[1],])
-  N<-sum(n)
   k<-length(n)
-  for (i in 2:k) {
-    y<-rbind(y,colMeans(x[(sum(n[1:(i-1)])+1):(sum(n[1:i])),]))
-  }
-  a<-rep(0,k)
-  A<-diag(0,p)
+  y<-matrix(0,k,p)
+  N<-sum(n)
   for (i in 1:k) {
-    Ai<-diag(0,p)
-    for (j in 1:n[i]) {
-      Ai<-Ai+(x[sum(n[1:i-1])+j,]-y[i])%o%(x[sum(n[1:i-1])+j,]-y[i])
-    }
+    y[i,]<-colMeans(x[,,i])
+  }
+  #这样就构造了一个y矩阵，其每一行分别对应着第i个总体的样本均值
+  a<-rep(0,k)
+  A<-matrix(0,p,p)
+  for (i in 1:k) {
+    Ai<-(n[i]-1)*cov(x[,,i])
     a[i]<-det(Ai)
     A<-A+Ai
   }

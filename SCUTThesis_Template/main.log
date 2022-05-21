@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2022.2.12)  11 MAY 2022 21:14
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2022.2.12)  12 MAY 2022 23:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -2188,7 +2188,12 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
 ] (./chapter01.tex
 第一章
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 8.0pt on input line 4.
+(Font)              scaled to size 8.0pt on input line 6.
+
+LaTeX Warning: Citation 'kato2010high' on page 1 undefined on input line 6.
+
+LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
+(Font)              scaled to size 8.0pt on input line 6.
 ) (./chapter02.tex [1
 
 
@@ -2209,19 +2214,27 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
 LaTeX Warning: Empty bibliography on input line 24.
 
 (./main.aux)
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 1D75DB863D41171A8621AB00BAF9520E;1374.
+
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                main
+(biblatex)                and rerun LaTeX afterwards.
+
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 47530 strings out of 476919
- 960715 string characters out of 5825424
- 1775151 words of memory out of 5000000
- 66631 multiletter control sequences out of 15000+600000
- 489020 words of font info for 181 fonts, out of 8000000 for 9000
+ 47551 strings out of 476919
+ 962282 string characters out of 5825424
+ 1776179 words of memory out of 5000000
+ 66652 multiletter control sequences out of 15000+600000
+ 491819 words of font info for 182 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 115i,11n,118p,1202b,1300s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 115i,11n,118p,1202b,1382s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on main.pdf (7 pages).

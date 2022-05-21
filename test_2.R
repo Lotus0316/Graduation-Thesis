@@ -8,7 +8,7 @@ mvg<-function(n=100,p){
 
 #传统卡方检验
 chi_method<-function(n,p=rep(1,3),x){
-  C<-cov(x)*(n-1)
+  C<-cov(x)*(n-1)*(n-1)/n
   y<-1
   for (i in 2:length(p)) {
     if(length((sum(p[1:i-1])+1):sum(p[1:i]))==1){
@@ -23,7 +23,7 @@ chi_method<-function(n,p=rep(1,3),x){
   }
   denomi<-det(C[c(1:p[1]),c(1:p[1])])*y
   Lambda_n<-(det(C)/denomi)
-  rho<-1-(2*(sum(p)^3-sum(p^3))+9*(p^2-sum(p)^2))/(6*n*(sum(p)^2-sum(p^2)))
+  rho<-1-(2*(sum(p)^3-sum(p^3))+9*(sum(p)^2-sum(p^2)))/(6*n*(sum(p)^2-sum(p^2)))
   -2*rho*log(Lambda_n)*(n/2)
   #原本Lambda_n的定义是W_n的n/2次方，但为了避免乘方过大导致Lambda_n溢出直接
   #log处补上系数n/2
@@ -33,12 +33,11 @@ chi_method<-function(n,p=rep(1,3),x){
 draw_chi<-function(n,p){
   f<-(1/2)*(sum(p)^2-sum(p^2))
   x<-replicate(10000,
-               chi_method(n,p,mvg(n,p)))
+               chi_method(n,p,mvg(n,sum(p))))
   hist(x,
        breaks=40,
        freq=F,
        xlab=NULL,
-       ylim=c(0,0.01),
        main = paste("n=",n,",","p=",paste(p,collapse=",")))
   curve(dchisq(x, f), 
         add=TRUE, 
@@ -70,7 +69,7 @@ cen_method<-function(n,p=rep(1,3),x){
 
 draw_cen<-function(n,p){
   x<-replicate(10000,
-               cen_method(n,p,mvg(n,p)))
+               cen_method(n,p,mvg(n,sum(p))))
   hist(x,
        breaks=40,
        freq=F,

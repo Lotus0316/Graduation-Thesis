@@ -1,8 +1,6 @@
 library(ggplot2)
 library(lava)
-library(MASS)
-library(dplyr)
-library(patchwork)#加载包
+library(MASS)#加载包
 mvg<-function(n=100,p){
   mean<-rep(0,p)
   sigma<-diag(p)
@@ -21,7 +19,6 @@ draw_chi<-function(n,p){
        breaks=40,
        freq=F,
        xlab=NULL,
-       ylim=c(0,0.01),
        main = paste("n=",n,",","p=",p))
   curve(dchisq(x, f), 
         add=TRUE, 
@@ -42,7 +39,6 @@ draw_cen<-function(n,p){
        breaks=40,
        freq=F,
        xlab=NULL,
-       ylim=c(0,0.01),
        main = paste("n=",n,",","p=",p))
   curve(dnorm(x),
         add=TRUE, 

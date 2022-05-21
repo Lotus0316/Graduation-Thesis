@@ -3,34 +3,31 @@ library(Matrix)
 mvg<-function(n,p){
   mean<-rep(0,sum(p))
   sigma<-diag(sum(p))
-  x<-mvrnorm(n[1], mean, sigma) #这里是用了正态性假设
-  for (i in 2:length(n)) {
-    x<-rbind(x,mvrnorm(n[i], mean, sigma))
+  y<-array(0,dim=c(max(n),p,length(n)))
+  for (i in 1:length(n)) {
+    y[,,i]<-mvrnorm(n[i], mean, sigma)
   }
-  x
+  y
 }
-#上述样本生成器的生成样本格式为将每个总体的样本依次拼接，为行向量形式，即x2j依次接在x1j下方，这样一来
-#第i个总体的样本就位于sum(n[1:i-1])+1到sum(n[1:i])行之间
-
 chi_method<-function(n,p,x){
-  y<-colMeans(x[1:n[1],])
-  N<-sum(n)
   k<-length(n)
-  for (i in 2:k) {
-    y<-rbind(y,colMeans(x[(sum(n[1:(i-1)])+1):(sum(n[1:i])),]))
+  y<-matrix(0,k,p)
+  N<-sum(n)
+  for (i in 1:k) {
+    y[i,]<-colMeans(x[,,i])
   }
   #这样就构造了一个y矩阵，其每一行分别对应着第i个总体的样本均值
-  A<-diag(rep(0,p))
+  A<-matrix(0,p,p)
   for (i in 1:k) {
     A<-A+n[i]*(y[i,]-colMeans(y))%o%(y[i,]-colMeans(y))
   }
   #以上为A矩阵的计算
   b<-rep(0,k)
-  B<-diag(0,p)
+  B<-matrix(0,p,p)
   for (i in 1:k) {
     Bi<-diag(0,p)
     for (j in 1:n[i]) {
-      Bi<-Bi+(x[sum(n[1:i-1])+j,]-y[i])%o%(x[sum(n[1:i-1])+j,]-y[i])
+      Bi<-Bi+(x[j,,i]-y[i,])%o%(x[j,,i]-y[i,])
     }
     b[i]<-det(Bi)
     B<-B+Bi
@@ -59,28 +56,32 @@ draw_chi<-function(n,p){
 }
 
 cen_method<-function(n,p,x){
-  y<-colMeans(x[1:n[1],])
-  N<-sum(n)
   k<-length(n)
-  for (i in 2:k) {
-    y<-rbind(y,colMeans(x[(sum(n[1:(i-1)])+1):(sum(n[1:i])),]))
+  y<-matrix(0,k,p)
+  N<-sum(n)
+  for (i in 1:k) {
+    y[i,]<-colMeans(x[,,i])
   }
-  A<-diag(rep(0,p))
+  #这样就构造了一个y矩阵，其每一行分别对应着第i个总体的样本均值
+  A<-matrix(0,p,p)
   for (i in 1:k) {
     A<-A+n[i]*(y[i,]-colMeans(y))%o%(y[i,]-colMeans(y))
   }
+  #以上为A矩阵的计算
   b<-rep(0,k)
-  B<-diag(0,p)
+  B<-matrix(0,p,p)
   for (i in 1:k) {
     Bi<-diag(0,p)
     for (j in 1:n[i]) {
-      Bi<-Bi+(x[sum(n[1:i-1])+j,]-y[i])%o%(x[sum(n[1:i-1])+j,]-y[i])
+      Bi<-Bi+(x[j,,i]-y[i,])%o%(x[j,,i]-y[i,])
     }
     b[i]<-det(Bi)
     B<-B+Bi
   }
+  #以上为B的计算，b为一个行向量，其每个元素分别保存了Bi的行列式
+  #接下来计算log Lambda_n
   log_Lam<-sum((n/2)*log(b))-(N/2)*log(det(A+B))+(N*p/2)*log(N)-sum((p*n/2)*log(n))
-  #以上为log Lambda的计算
+  #接下来计算渐进均值和方差
   u_n<-(1/4)*(-2*k*p-sum(p/n)+N*(-log(1-p/N))*(2*p-2*N+3)-sum(n*(-log(1-p/(n-1)))*(2*p-2*n+3)))
   sigma2<-(1/2)*(sum((-log(1-p/(n-1)))*(n^2)/(N^2))-(-log(1-p/N)))
   (log_Lam-u_n)/(N*sqrt(sigma2))

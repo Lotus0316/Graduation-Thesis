@@ -1,5 +1,6 @@
 library(MASS)
 library(Matrix)
+library(lava)
 mvg<-function(n=100,p){
   mean<-rep(0,p)
   sigma<-diag(p)
